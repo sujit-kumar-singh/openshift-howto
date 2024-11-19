@@ -59,35 +59,9 @@ For this the default instllation of MetalLB operator was performed, followed by 
 apiVersion: metallb.io/v1beta1
 kind: MetalLB
 metadata:
-  creationTimestamp: "2024-11-18T08:56:19Z"
-  generation: 1
   name: metallb
   namespace: metallb-system
-  resourceVersion: "102210640"
-  uid: 7e369490-1752-470b-bb6e-6e584b6fff01
 spec: {}
-status:
-  conditions:
-  - lastTransitionTime: "2024-11-19T03:12:46Z"
-    message: ""
-    reason: Available
-    status: "True"
-    type: Available
-  - lastTransitionTime: "2024-11-19T03:12:46Z"
-    message: ""
-    reason: Upgradeable
-    status: "True"
-    type: Upgradeable
-  - lastTransitionTime: "2024-11-19T03:12:46Z"
-    message: ""
-    reason: Progressing
-    status: "False"
-    type: Progressing
-  - lastTransitionTime: "2024-11-19T03:12:46Z"
-    message: ""
-    reason: Degraded
-    status: "False"
-    type: Degraded
 ```
 
 
