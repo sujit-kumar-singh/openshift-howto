@@ -1,1 +1,1 @@
-## Misceallaneous stuff realted to OpenShift Configuration
+## Misceallaneous stuff related to OpenShift Configuration
