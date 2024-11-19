@@ -82,7 +82,7 @@ spec:
 
 ## Create a Load Balancer type of service
 
-## MetalLB gives an IP IP has to be in the same range as the OCP node IPs
+### MetalLB gives an IP IP has to be in the same range as the OCP node IPs
 
 ```yaml
 cat > lb-service.yaml << EOF
@@ -221,16 +221,21 @@ example-6df4594c8b-skvd7   1/1     Running   0          46
 ### Test by Creating the files
 
 ```bash
-for pod in example-6df4594c8b-9698h example-6df4594c8b-cwgz6 example-6df4594c8b-skvd7 ; do oc exec $pod -- touch /testcephfs/$pod; done
+for pod in $(oc get pods -l app=example -o name | sed 's|^pod/||g') ; do oc exec $pod -- touch /testcephfs/$pod; done
 ```
 
 ### Test by reading the files
 
 ```bash
-# for pod in example-6df4594c8b-9698h example-6df4594c8b-cwgz6 example-6df4594c8b-skvd7 ; do oc exec $pod -- ls -la /testcephfs/$pod; done
--rw-r--r--. 1 1001020000 1001020000 0 Nov 18 10:17 /testcephfs/example-6df4594c8b-9698h
--rw-r--r--. 1 1001020000 1001020000 0 Nov 18 10:17 /testcephfs/example-6df4594c8b-cwgz6
--rw-r--r--. 1 1001020000 1001020000 0 Nov 18 10:17 /testcephfs/example-6df4594c8b-skvd7
-#
 
+for pod in $(oc get pods -l app=example -o name | sed 's|^pod/||g') ; do oc exec $pod -- ls -la /testcephfs/$pod; done
+
+```
+
+You should be able to see something similar as the output of the previous command
+
+```bash
+-rw-r--r--. 1 1001020000 1001020000 0 Nov 19 11:17 /testcephfs/example-6df4594c8b-9698h
+-rw-r--r--. 1 1001020000 1001020000 0 Nov 19 11:17 /testcephfs/example-6df4594c8b-cwgz6
+-rw-r--r--. 1 1001020000 1001020000 0 Nov 19 11:17 /testcephfs/example-6df4594c8b-skvd7
 ```
