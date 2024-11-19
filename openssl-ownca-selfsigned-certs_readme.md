@@ -32,4 +32,7 @@ cat MyOwnRootCA.key > passphrase.txt
 ```
 
 ## Sign the CSR
+
+```bash
 openssl x509 -req -passin file:passphrase.txt -in $cn.csr -out $cn.pem -CA $CANAME.crt -CAkey $CANAME.key -CAcreateserial -days 1825 -sha256
+```
