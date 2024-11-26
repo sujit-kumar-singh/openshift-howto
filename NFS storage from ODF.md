@@ -1,17 +1,5 @@
 ## NFS Storage from ODF for internal and external mounts and RWX use
 
-
-## References
-
-https://access.redhat.com/solutions/7014596
-
-https://docs.openshift.com/container-platform/4.12/networking/ingress-node-firewall-operator.html
-
-https://docs.redhat.com/en/documentation/openshift_container_platform/4.14/html/networking/load-balancing-with-metallb#olm-updating-metallb-operatorgroup_metallb-upgrading-operator
-
-https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.17/html-single/managing_and_allocating_storage_resources/index#consuming-nfs-exports-externally-from-the-openshift-cluster_rhodf
-
-
 ## Enable ODF NFS
 
 ```bash
@@ -266,3 +254,15 @@ for pod in $(oc get pods -n mysql-new -l app=nfs-mount -o name| sed 's|pod/||g')
 -rw-r--r--. 1 1000900000 1000900000 0 Nov 26 18:15 /tmp/mount/nfs-mount-7f8fcffccc-mlxwr
 [root@infradbs-02 ~]#
 ```
+
+## References
+
+https://access.redhat.com/solutions/7014596
+
+https://docs.openshift.com/container-platform/4.12/networking/ingress-node-firewall-operator.html
+
+https://docs.redhat.com/en/documentation/openshift_container_platform/4.9/html/networking/load-balancing-with-metallb#nw-metallb-layer2_about-metallb-and-metallb-operator
+
+https://docs.redhat.com/en/documentation/openshift_container_platform/4.14/html/networking/load-balancing-with-metallb#olm-updating-metallb-operatorgroup_metallb-upgrading-operator
+
+https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.17/html-single/managing_and_allocating_storage_resources/index#consuming-nfs-exports-externally-from-the-openshift-cluster_rhodf
