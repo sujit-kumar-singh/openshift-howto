@@ -33,7 +33,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: nfs-pvc-1
-  namespace: test-nfs-pvc
+  namespace: msyql-new
 spec:
   accessModes:
    - ReadWriteMany
