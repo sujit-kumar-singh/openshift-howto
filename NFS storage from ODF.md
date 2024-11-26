@@ -144,7 +144,7 @@ sts                                                      LoadBalancer   172.32.1
                                                                                          101m
 ```
 
-### get PV name from PVC
+### Get PV name from PVC
 
 ```bash
 [root@infradbs-02 ~]# oc -n mysql-new get pvc nfs-pvc-1 -o jsonpath='{.spec.volumeName}{"\n"}'
