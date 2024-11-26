@@ -53,20 +53,24 @@ This example makes use of MetalLB operator that has a defined addresspool.
 
 For this the default instllation of MetalLB operator was performed, followed by creation of an instance of the MetalLB. An "ipaddresspool" was defined that looked like below for this.
 
+Metal LB Instance
+
 ```yaml
 
-[root@infradbs-02 testcerts]# oc get metallbs.metallb.io metallb -o yaml
-apiVersion: metallb.io/v1beta1
-kind: MetalLB
-metadata:
-  name: metallb
-  namespace: metallb-system
-spec: {}
+apiVersion: v1
+items:
+- apiVersion: metallb.io/v1beta1
+  kind: MetalLB
+  metadata:
+    name: metallb
+    namespace: metallb-system
+
 ```
 
 
+IPAddressPool definition
+
 ```yaml
-# oc get ipaddresspools.metallb.io ip-addresspool-sample1 -o yaml
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
@@ -74,9 +78,30 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 10.10.11.218-10.10.11.220
+  - 10.10.11.218-10.10.11.218
+  - 10.10.11.219-10.10.11.219
+  - 10.10.11.226-10.10.11.226
+  - 10.10.11.229-10.10.11.229
+  - 10.10.11.230-10.10.11.230
   autoAssign: true
   avoidBuggyIPs: false
+```
+
+L2Advertisement Definition
+
+```yaml
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  creationTimestamp: "2024-11-26T17:12:26Z"
+  generation: 1
+  name: l2-adv-sample1
+  namespace: metallb-system
+  resourceVersion: "112944263"
+  uid: 28aac232-8f4b-47d2-8b7b-33190ddb2c1b
+spec:
+  ipAddressPools:
+  - ip-addresspool-sample1
 ```
 
 
@@ -111,39 +136,49 @@ EOF
 ### Ensure that the loadbalancer type service gets an IP from the MetalLB pool
 
 ```bash
-# oc get service -A | grep -i loadbalancer | grep -i nfs
-openshift-storage                                  rook-ceph-nfs-ocs-storagecluster-cephnfs-load-balancer            LoadBalancer   172.32.194.250   10.10.11.220                                                                        2049:31920/TCP                                                                                             101m
+[root@infradbs-02 ~]# oc get service -n openshift-storage | grep -i LoadBalancer
+rook-ceph-nfs-ocs-storagecluster-cephnfs-load-balancer   LoadBalancer   172.32.35.53     10.10.11.229   2049:32607/TCP                                             35m
+s3                                                       LoadBalancer   172.32.193.194   10.10.11.218   80:32305/TCP,443:31584/TCP,8444:31608/TCP,7004:30799/TCP   82d
+sts                                                      LoadBalancer   172.32.143.10    10.10.11.219   443:32156/TCP                                              82d
+[root@infradbs-02 ~]#
+                                                                                         101m
 ```
 
 ### get PV name from PVC
 
 ```bash
-# oc -n test-nfs-pvc  get pvc nfs-pvc-1 -o jsonpath='{.spec.volumeName}'
-pvc-43ff87a8-7f89-4af3-92bb-38a670ff70d3
+[root@infradbs-02 ~]# oc -n mysql-new get pvc nfs-pvc-1 -o jsonpath='{.spec.volumeName}{"\n"}'
+pvc-4eeb0c8d-9465-4112-a941-08a34f8ba1bb
+[root@infradbs-02 ~]#
+
 ```
 
 ### Get Share name from PV
 ```bash
 
-# oc get pv pvc-43ff87a8-7f89-4af3-92bb-38a670ff70d3 --output jsonpath='{.spec.csi.volumeAttributes.share}'
-/0001-0011-openshift-storage-0000000000000001-82b5af97-708a-4038-bc7a-74c5188cc340
+[root@infradbs-02 ~]# oc get pv pvc-4eeb0c8d-9465-4112-a941-08a34f8ba1bb -o jsonpath='{.spec.csi.volumeAttributes.share}{"\n"}'
+/0001-0011-openshift-storage-0000000000000001-9b58969f-accf-4774-90c9-817ec5ada3c2
+[root@infradbs-02 ~]#
+
 ```
 
 ### Get the Ingress to reach NFS
 
 ```bash
-# oc -n openshift-storage get service rook-ceph-nfs-ocs-storagecluster-cephnfs-load-balancer --output jsonpath='{.status.loadBalancer.ingress}'
-[{"ip":"10.10.11.220"}]
+[root@infradbs-02 ~]# oc -n openshift-storage get service rook-ceph-nfs-ocs-storagecluster-cephnfs-load-balancer --output jsonpath='{.status.loadBalancer.ingress}{"\n"}'
+[{"ip":"10.10.11.229"}]
+[root@infradbs-02 ~]#
+
 ```
 
 ## Mount on the client
 
-##NOTE: THis might need iptables to be opened on the OCP worker/storage nodes In additon to the outside firewall rules
+##NOTE: This might need iptables to be opened on the OCP worker/storage nodes In additon to the outside firewall rules
 
 ```bash
-mkdir -p /export/mount/path
+mkdir -p /tmp/mount
 
-mount -t nfs4 -o proto=tcp 10.10.11.220:/0001-0011-openshift-storage-0000000000000001-ba9426ab-d61b-11ec-9ffd-0a580a800215 /export/mount/path
+mount -t nfs4 -o proto=tcp 10.10.11.229:/0001-0011-openshift-storage-0000000000000001-9b58969f-accf-4774-90c9-817ec5ada3c2 /tmp/mount/
 ```
 
 ### Unmount the NFS filesystem if it does not remain to be mounted
@@ -157,21 +192,18 @@ This is how a deployment with multiple Pods looks like to mount the PVC effectiv
 
 
 ```yaml
-# Deployment example.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "2"
-  name: example
-  namespace: test-nfs-pvc
+  name: nfs-mount
+  namespace: mysql-new
 spec:
   progressDeadlineSeconds: 600
   replicas: 3
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: example
+      app: nfs-mount
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -181,7 +213,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        app: example
+        app: nfs-mount
     spec:
       containers:
       - image: image-registry.openshift-image-registry.svc:5000/openshift/httpd:latest
@@ -194,7 +226,7 @@ spec:
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
-        - mountPath: /testcephfs
+        - mountPath: /tmp/mount
           name: nfs-pvc-1
       dnsPolicy: ClusterFirst
       restartPolicy: Always
@@ -205,37 +237,32 @@ spec:
       - name: nfs-pvc-1
         persistentVolumeClaim:
           claimName: nfs-pvc-1
-
 ```
 
 ### Validate the pods can write to the NFS Share
 
 ```bash
-# oc get pods
-NAME                       READY   STATUS    RESTARTS   AGE
-example-6df4594c8b-9698h   1/1     Running   0          46m
-example-6df4594c8b-cwgz6   1/1     Running   0          46m
-example-6df4594c8b-skvd7   1/1     Running   0          46
+[root@infradbs-02 ~]# oc get pods -n mysql-new -l app=nfs-mount
+NAME                         READY   STATUS    RESTARTS   AGE
+nfs-mount-7f8fcffccc-2h275   1/1     Running   0          36m
+nfs-mount-7f8fcffccc-hcpqp   1/1     Running   0          36m
+nfs-mount-7f8fcffccc-mlxwr   1/1     Running   0          37m
+[root@infradbs-02 ~]#
+
 ```
 
 ### Test by Creating the files
 
 ```bash
-for pod in $(oc get pods -l app=example -o name | sed 's|^pod/||g') ; do oc exec $pod -- touch /testcephfs/$pod; done
+for pod in $(oc get pods -n mysql-new -l app=nfs-mount -o name| sed 's|pod/||g'); do oc exec $pod -- touch /tmp/mount/$pod; done
 ```
 
 ### Test by reading the files
 
 ```bash
-
-for pod in $(oc get pods -l app=example -o name | sed 's|^pod/||g') ; do oc exec $pod -- ls -la /testcephfs/$pod; done
-
-```
-
-You should be able to see something similar as the output of the previous command
-
-```bash
--rw-r--r--. 1 1001020000 1001020000 0 Nov 19 11:17 /testcephfs/example-6df4594c8b-9698h
--rw-r--r--. 1 1001020000 1001020000 0 Nov 19 11:17 /testcephfs/example-6df4594c8b-cwgz6
--rw-r--r--. 1 1001020000 1001020000 0 Nov 19 11:17 /testcephfs/example-6df4594c8b-skvd7
+[root@infradbs-02 ~]# for pod in $(oc get pods -n mysql-new -l app=nfs-mount -o name| sed 's|pod/||g'); do oc exec $pod -- ls -la /tmp/mount/$pod; done
+-rw-r--r--. 1 1000900000 1000900000 0 Nov 26 18:15 /tmp/mount/nfs-mount-7f8fcffccc-2h275
+-rw-r--r--. 1 1000900000 1000900000 0 Nov 26 18:15 /tmp/mount/nfs-mount-7f8fcffccc-hcpqp
+-rw-r--r--. 1 1000900000 1000900000 0 Nov 26 18:15 /tmp/mount/nfs-mount-7f8fcffccc-mlxwr
+[root@infradbs-02 ~]#
 ```
