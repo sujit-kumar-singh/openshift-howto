@@ -183,7 +183,7 @@ mount -t nfs4 -o proto=tcp 10.10.11.229:/0001-0011-openshift-storage-00000000000
 
 ### Unmount the NFS filesystem if it does not remain to be mounted
 ```bash
-cd && umount /export/mount/path
+cd && umount /tmp/mount
 ```
 
 ### Mounting the same inside a deployment as RWX that has mulitple pods
