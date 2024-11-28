@@ -12,7 +12,7 @@ wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O 
 for secret in $(oc get secrets | grep 'tars-es' | awk '{print $1}'); do oc get secret $secret -o yaml > secret.yaml; done
 ```
 
-### on the source cluster in the source project
+### On the source cluster in the source project
 
 ### Get all the secrets in their YAML formatted files
 
@@ -20,7 +20,7 @@ for secret in $(oc get secrets | grep 'tars-es' | awk '{print $1}'); do oc get s
 for secret in $(oc get secret | grep -i 'tars-es'| awk '{print $1}'); do oc get secret $secret -o yaml > secret-$secret.yaml; done
 ````
 
-### Clean up fileds from the YAML for creationTimestamp, ownerReferences etc.
+### Clean up fields from the YAML for creationTimestamp, ownerReferences etc.
 
 ```bash
 for file in *.yaml
@@ -28,8 +28,6 @@ do
 yq 'del(.metadata.ownerReferences,.metadata.creationTimestamp,.metadata.resourceVersion,.metadata.uid, .metadata.generation)' $file > cleaned_$file
 done
 ```
-
-
 
 ### On the target cluster in the target project
 
@@ -40,5 +38,4 @@ for file in cleaned*tars-es*.yaml
 do
 oc create -f $file
 done
-
 ```
