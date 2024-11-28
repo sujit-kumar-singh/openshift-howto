@@ -6,13 +6,13 @@
 wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&    chmod +x /usr/bin/yq
 ```
 
+### On the source cluster in the source project
+
 ### Backup all secrets in a single file
 
 ```bash
 for secret in $(oc get secrets | grep 'tars-es' | awk '{print $1}'); do oc get secret $secret -o yaml > secret.yaml; done
 ```
-
-### On the source cluster in the source project
 
 ### Get all the secrets in their YAML formatted files
 
