@@ -107,3 +107,8 @@ References:
 https://docs.redhat.com/en/documentation/red_hat_ceph_storage/4/html/block_device_guide/ceph-block-device-commands#displaying-the-command-help_block
 
 https://access.redhat.com/articles/4628891
+
+https://red-hat-storage.github.io/ocs-training/RegionalDR/manual/ocs4-multisite-replication.html#_enable_volumes_for_snapshot_replication
+
+https://docs.microfocus.com/doc/Containerized_Operations_Bridge/24.1/depconcepts
+
