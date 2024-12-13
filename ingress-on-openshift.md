@@ -59,8 +59,10 @@ spec:
 
 ```bash
 # oc get ingress
-c NAME            CLASS               HOSTS                                  ADDRESS                                     PORTS     AGE
-myapplication   openshift-default   myapplication.apps.myocp.ucmcswg.com   router-default.apps.dbs-ocp07.ucmcswg.com   80, 443   3m16s
+NAME            CLASS               HOSTS                                  ADDRESS                                     PORTS     AGE
+myapplication   openshift-default   myapplication.apps.myocp.ucmcswg.com   router-default.apps.dbs-ocp07.ucmcswg.com   80, 443   9m51s
+
+
 
 
 # oc get routes
