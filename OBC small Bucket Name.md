@@ -1,5 +1,5 @@
 ## Use an Object Bucket Claim (OBC) in Red Hat OpenShift Data Foundation NooBaa Storage Class with a small bucket name
-# Generally for OBC the generated bucket names are large and This is needed to get a small bucket name.
+### Generally for OBC the generated bucket names are large and This is needed to get a small bucket name.
 
 
 ```yaml
