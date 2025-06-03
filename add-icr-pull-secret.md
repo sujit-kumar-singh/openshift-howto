@@ -1,12 +1,12 @@
 ### IBM Container Registry Entitlement Key and IBM Operator Catalog
 
+
+Ensure you have "jq" already installed.
+Get the IBM Entitlement key using your IBM Credentials from here.
+
 https://www.ibm.com/docs/en/fusion-software/2.10.0?topic=prerequisites-obtaining-entitlement-key
 
-Assuming this is your entitlelment key
-
-eyJ0eXaSI6I.......E3hQXf3nfr2xpN5wdvsU9SvRrFHXD6o
-
-
+Assuming this is your entitlelment key **eyJ0eXaSI6I.......E3hQXf3nfr2xpN5wdvsU9SvRrFHXD6o**
 
 ```bash
 export ibm_entitlement_key='eyJ0eXaSI6I.......E3hQXf3nfr2xpN5wdvsU9SvRrFHXD6o'
