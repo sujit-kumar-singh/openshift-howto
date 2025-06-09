@@ -46,8 +46,6 @@ export IPCFG="ip=10.10.11.156::10.10.11.1:255.255.255.0:::none nameserver=10.10.
 govc vm.change -vm BOOTSTRAP -dc $datacenter -e "guestinfo.afterburn.initrd.network-kargs=${IPCFG}"
 govc vm.change -dc $datacenter  -e="disk.enableUUID=1" -dc $datacenter -vm BOOTSTRAP
 govc vm.change -dc $datacenter -vm BOOTSTRAP -e "stealclock.enable=TRUE"
-
-gzip -9c "${CONFIG_FILE}" | base64 -w0 - > "${CONFIG_FILE_ENCODED}"
 govc vm.change -vm BOOTSTRAP -dc $datacenter -e "guestinfo.ignition.config.data.encoding=${CONFIG_ENCODING}"
 govc vm.change -vm BOOTSTRAP -dc $datacenter -f "guestinfo.ignition.config.data=${CONFIG_FILE_ENCODED}"
 ```
