@@ -123,15 +123,12 @@ ocp30storage
 # BUCKET_PORT
 443
 
-
 ubuntu@ubuntu-test:~/quay/geo-rep$ oc -n quay-geo-rep extract secret/ocp30storage --to=-
 # AWS_ACCESS_KEY_ID
 wpKDCNhCXnluYc6uShSQ
 # AWS_SECRET_ACCESS_KEY
 ojXT+VYN5Hfhm9veRnBdySoJvdqDHY7ht5R6+bC9
 ``
-
-
 
 #### OBC on the second cluster
 
@@ -171,7 +168,6 @@ ocp50storage
 # BUCKET_HOST
 s3.openshift-storage.svc
 
-
 oc -n quay-geo-rep extract secret/ocp50storage --to=-
 # AWS_ACCESS_KEY_ID
 AcMFWn1GQDX842WKvqkM
@@ -180,10 +176,9 @@ GGeXFZHS3QJ/Gd6EGhQV4C9f5rVecdmxhYIzk/Hs
 ubuntu@ubuntu-test:~/quay/geo-rep$
 ```
 
-
 ### Configure HAProxy Load balancer
 
-This HAPROXY VM works as single entry-point for the Registry Traffic
+This HAPROXY VM works as single entry-point for the Registry Traffic. In this haproxy configuration for the backend, there is one worker node from each of the OpenShift clusters where openshift router pods are running.
 
 ```bash
 [root@bastion haproxy]# nslookup 10.10.11.92
@@ -264,12 +259,15 @@ For the geo-replication endpoint of the Quay Registry, a public certificate is u
 
 This certificate is used for the PassThrough termination of the TLS certificate on the Quay registry pods on the OpenShift Cluster.
 
+Please refer to the below for understanding the TLS termination for the scenarios where either router or the tls is or both of them are managed.
+
+Ref: https://docs.redhat.com/en/documentation/red_hat_quay/3.14/html-single/deploying_the_red_hat_quay_operator_on_openshift_container_platform/index#operator-preconfig-tls-routes
+
 ```bash
 sudo certbot -d quaygeorep.ucmcswg.com --manual --preferred-challenges dns certonly --register-unsafely-without-email
 ```
 
 Ensure that SERVER_HOSTNAME matches the route and must match the hostname of the global load balancer
-
 
 ### Red Hat Quay Operator install on both the clusters.
 
@@ -286,7 +284,6 @@ New project to hold the QuayRegistry instance
 ```bash
 oc new-project quay-enterprise
 ```
-
 
 Create Config file for the first cluster
 
@@ -381,7 +378,7 @@ EOF
 
 The clair database is different from the quay database. is also hosted on the same DB server 
 
-# https://docs.redhat.com/en/documentation/red_hat_quay/3/html-single/vulnerability_reporting_with_clair_on_red_hat_quay/index#configuring-custom-clair-database-managed
+Ref: https://docs.redhat.com/en/documentation/red_hat_quay/3/html-single/vulnerability_reporting_with_clair_on_red_hat_quay/index#configuring-custom-clair-database-managed
 
 Create the configuration file for the clair service
 
@@ -405,8 +402,7 @@ notifier:
 EOF
 ```
 
-
-# Quay regsitry custom resource for the first cluster
+### Quay registry custom resource for the first cluster
 
 QuayRegistry configuration for the first cluster.
 
@@ -464,7 +460,7 @@ Create the QuayRegistry on the first cluster.
 oc create -f ocp30-quayregistry.yaml
 ```
 
-Create the Quay regsitry custom resource for the second cluster
+Create the Quay registry custom resource for the second cluster
 
 
 ```bash
