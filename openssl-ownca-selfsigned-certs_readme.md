@@ -8,7 +8,10 @@ export CANAME=MyOwnRootCA
 
 openssl genrsa -des -out $CANAME.key 4096
 
-The above asks for a passphrase, keep the passphrase safe.
+# if "-des" is not allowed then use "-des3
+
+# The above asks for a passphrase, keep the passphrase safe.
+# openssl genrsa -des3 -out $CANAME.key 4096
 
 openssl req -x509 -new -nodes -key $CANAME.key -sha256 -days 1826 -out $CANAME.crt -subj '/C=AE/ST=Dubai/L=Dubai/O=Mycompany Corp/CN=$CANAME'
 ```
