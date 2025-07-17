@@ -24,7 +24,7 @@ Create the folder to hold the openssl config file, CSR, key and Signed certifica
 ```bash
 export cn='apps.myocp.ucmcswg.com'
 mkdir -p new_certs_dir/$cn
-cd mkdir -p new_certs_dir/$cn
+cd new_certs_dir/$cn
 
 # backup files and keys if any
 cd new_certs_dir/$cn/
