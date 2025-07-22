@@ -149,12 +149,14 @@ If you just need to create a CSR with CN and SAN that will be later on signed by
 Create openssl.cnf file like below
 
 ```bash
-cat > openssl.cnf << EOF
+
 export san1=example.com
 export san2=www.example.com
 export san3=another.example.org
 export san4=10.10.11.1
+export cn=www.example.com
 
+cat > openssl.cnf << EOF
 [req]
 distinguished_name = req_distinguished_name
 x509_extensions = v3_req
@@ -166,7 +168,7 @@ ST = State
 L = City
 O = Organization
 OU = Department
-CN = example.com
+CN = ${cn}
 
 [v3_req]
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment
