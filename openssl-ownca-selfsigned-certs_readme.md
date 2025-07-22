@@ -193,6 +193,6 @@ openssl req -new -key ${san1}.key -out ${san2}.csr -config openssl.conf
 Sign the CSR
 
 ```bash
-openssl x509 -req -passin file:../../passphrase.txt -in ${san}.csr -out ${san}.pem -CA ../../$CANAME.crt -CAkey ../../$CANAME.key -CAcreateserial -days 1825 -sha256 -extfile openssl-ca.cnf -extensions usr_cert
+openssl x509 -req -passin file:../../passphrase.txt -in ${san}.csr -out ${san}.pem -CA ../../$CANAME.crt -CAkey ../../$CANAME.key -CAcreateserial -days 1825 -sha256 -extfile openssl.cnf -extensions usr_cert
 
 ```
