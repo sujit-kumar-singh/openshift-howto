@@ -141,3 +141,56 @@ openssl req -config openssl-ca.cnf -extensions usr_cert -new -subj "/C=AE/ST=Dub
 openssl x509 -req -passin file:../../passphrase.txt -in $cn.csr -out $cn.pem -CA ../../$CANAME.crt -CAkey ../../$CANAME.key -CAcreateserial -days 1825 -sha256 -extfile openssl-ca.cnf -extensions usr_cert
 
 ```
+
+### Another method using openssl.cnf configuration file to create key and csr and sign using CA
+
+If you just need to create a CSR with CN and SAN that will be later on signed by internal CA
+
+Create openssl.cnf file like below
+
+```bash
+cat > openssl.cnf << EOF
+export san1=example.com
+export san2=www.example.com
+export san3=another.example.org
+export san4=10.10.11.1
+
+[req]
+distinguished_name = req_distinguished_name
+x509_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+C = US
+ST = State
+L = City
+O = Organization
+OU = Department
+CN = example.com
+
+[v3_req]
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth, clientAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = $san1
+DNS.2 = $san2
+DNS.3 = $san3
+IP.1 = $san4
+EOF
+
+```
+
+Create the KEY and CSR to be signed together
+
+```bash
+openssl req -new -key ${san1}.key -out ${san2}.csr -config openssl.conf
+```
+
+Sign the CSR
+
+```bash
+openssl x509 -req -passin file:../../passphrase.txt -in ${san}.csr -out ${san}.pem -CA ../../$CANAME.crt -CAkey ../../$CANAME.key -CAcreateserial -days 1825 -sha256 -extfile openssl-ca.cnf -extensions usr_cert
+
+```
