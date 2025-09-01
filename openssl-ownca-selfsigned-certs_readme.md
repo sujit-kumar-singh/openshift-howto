@@ -1,5 +1,7 @@
 # Example of Own CA creation, then use the CA to sign the own generate CSRs
 
+### More ref: server 10.10.11.46 folder /home/ubuntu/cert-manager-operator/certs
+
 ## Create CA (This is just once in a long time)
 ```bash
 
