@@ -198,3 +198,41 @@ Sign the CSR
 openssl x509 -req -passin file:../../passphrase.txt -in ${san}.csr -out ${san}.pem -CA ../../$CANAME.crt -CAkey ../../$CANAME.key -CAcreateserial -days 1825 -sha256 -extfile openssl.cnf -extensions usr_cert
 
 ```
+
+
+## Yet another CSR configuration file and use the same to create a CSR with SAN
+
+```bash
+
+cat > csr.cnf << EOF
+
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+C = AE
+ST = Dubai
+L = Dubai
+O = UCMC
+OU = DBS
+CN = test-openssl.ucmcswg.com
+
+[v3_req]
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth, clientAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = testopenssl.ucmcswg.com
+DNS.2 = test-openssl.ucmcswg.com
+
+EOF
+```
+
+### Generate the Certificate Signing Request
+
+```bash
+openssl req -new -newkey rsa:4096 -nodes -keyout server.key -out server.csr -config csr.cnf -sha256
+```
