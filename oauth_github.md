@@ -72,3 +72,19 @@ oc get pods -n openshift-authenticaton
 Type in the username and password and if needed confirm on the organization association of the user when prompted.
 
 
+### Allow the users the needed RBAC on the OpenShift cluster
+
+Once a user logs in authentication from GitHub, OpenShift creates the user and identity for the user, that can be seen using the following.
+
+```bash
+oc get users
+oc get identities
+```
+
+The identities shows which authentication provider is the user coming from.
+
+Now give the needed role to the user. Assume user1 is the GitHub user and you need to give project admin role to the user on project1 on the OpenShift cluster.
+
+```bash
+oc policy add-role-to-user admin user1 -n project1
+```
