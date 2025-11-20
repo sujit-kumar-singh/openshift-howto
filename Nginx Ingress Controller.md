@@ -260,7 +260,6 @@ gitlab.apps.dbs-ocp07.ucmcswg.com. IN A 10.10.11.44
 kas.apps.dbs-ocp07.ucmcswg.com. IN A 10.10.11.44
 minio.apps.dbs-ocp07.ucmcswg.com. IN A 10.10.11.44
 registry.apps.dbs-ocp07.ucmcswg.com. IN A 10.10.11.44
-ctrntnx-3.dbsntnx.ucmcswg.com. IN A 10.10.11.44
 ```
 
 ### Create the Application
