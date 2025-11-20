@@ -269,14 +269,8 @@ ctrntnx-3.dbsntnx.ucmcswg.com. IN A 10.10.11.44
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "1"
-  creationTimestamp: "2025-11-20T09:52:02Z"
-  generation: 1
   name: httpd
   namespace: gitlab-system
-  resourceVersion: "15668312"
-  uid: 0f5663fb-18f6-4b56-b95b-deee604bef78
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
@@ -318,29 +312,17 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: "2025-11-20T09:53:16Z"
   name: httpd
   namespace: gitlab-system
-  resourceVersion: "15668772"
-  uid: 8cb37d65-72dd-48a1-ae7a-833603dd2665
 spec:
-  clusterIP: 172.30.236.24
-  clusterIPs:
-  - 172.30.236.24
   internalTrafficPolicy: Cluster
-  ipFamilies:
-  - IPv4
-  ipFamilyPolicy: SingleStack
   ports:
   - port: 8080
     protocol: TCP
     targetPort: 8080
   selector:
     app: httpd
-  sessionAffinity: None
   type: ClusterIP
-status:
-  loadBalancer: {}
 ```
 
 ### Expose the service with an Ingress using the Nginx Ingress Controller
