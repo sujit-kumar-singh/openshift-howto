@@ -345,6 +345,7 @@ status:
 
 ### Expose the service with an Ingress using the Nginx Ingress Controller
 
+```yaml
 kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -366,3 +367,4 @@ spec:
                 name: httpd
                 port:
                   number: 8080
+```
