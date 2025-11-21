@@ -244,6 +244,9 @@ spec:
     secret: ''
 ```
 
+## Create a test application and test the Nginx Ingress Controller using an Ingress
+
+
 ### DNS records for loadbalancer type of service
 
 Get the loadbalancer type of service created by the nginx operator.
@@ -257,13 +260,11 @@ nginxingress-sample-nginx-ingress-controller                LoadBalancer   172.3
 
 ### Ensure you create a DNS record in the DNS server as here
 
+This is how the DNS entry looks like for a BIND DNS server.
+
 ```bash
 $ grep 10.10.11.44 /var/named/fwd.ucmcswg.com.db
 testapplication.apps.dbs-ocp07.ucmcswg.com. IN A 10.10.11.44
-gitlab.apps.dbs-ocp07.ucmcswg.com. IN A 10.10.11.44
-kas.apps.dbs-ocp07.ucmcswg.com. IN A 10.10.11.44
-minio.apps.dbs-ocp07.ucmcswg.com. IN A 10.10.11.44
-registry.apps.dbs-ocp07.ucmcswg.com. IN A 10.10.11.44
 ```
 
 ### Create the Application
