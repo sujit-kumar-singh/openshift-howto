@@ -1,4 +1,4 @@
-### GitLab installation on OpenShift
+## GitLab installation on OpenShift
 
 GitLab comes with it's own implementation of Certificate Management and Ingress Cotroller.
 Here we use Nginx provided Nginx Operator based Ingress Controller and not the nginx ingress controller that GitLab provides.
@@ -18,11 +18,11 @@ oc create secret tls wildcard-tls --cert fullchain2.pem --key privkey2.pem
 
 ### Create an instance of GitLab in the gitlab-system namespace
 
-An instance is created as per the YAML below.
+At the minimum set these values here.
 
-spec.chart.values.global.hosts.domain is set to the **apps.dbs-ocp07.ucmcswg.com** - This will be the wildcard domain of the OCP cluster.
+**spec.chart.values.global.hosts.domain** is set to the **apps.dbs-ocp07.ucmcswg.com** - This will be the wildcard domain of the OCP cluster.
 
-spec.chart.values.global.ingress.tls.secretName is set to the **wildcard-tls** - This is the tls secret with the tls key and certificate that has the wildcard CN and SAN for the cluster wildcard DNS
+**spec.chart.values.global.ingress.tls.secretName** is set to the **wildcard-tls** - This is the tls secret with the tls key and certificate that has the wildcard CN and SAN for the cluster wildcard DNS
 
 ```yaml
 apiVersion: apps.gitlab.com/v1beta1
