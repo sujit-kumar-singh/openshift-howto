@@ -53,15 +53,15 @@ The Nginx Ingress Controller has to coexist as an additional ingress controller 
 oc describe project nginx-ingress
 ```
 
-spec.pod.runAsUser will be set as the value of **1000800000**
+**spec.pod.runAsUser** will be set as the value of **1000800000**
 
 ### Wildcard certificate
 
-spec.wildcardTLS.secret will be set to the value of **openshift-ingress/router-certs-oct-2025**
+**spec.wildcardTLS.secret** will be set to the value of **openshift-ingress/router-certs-oct-2025**
 
 This is the same wildcard certificate that is used by the OpenShift Default Router. 
 
-Has a wildcard set as the CN and SAN for the TLS certificate as '*.apps.dbs-ocp07.ucmcswg.com'
+Has a wildcard set as the CN and SAN for the TLS certificate as **'*.apps.dbs-ocp07.ucmcswg.com'**
 
 ### Create an Nginx Controller.
 
